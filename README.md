@@ -30,7 +30,7 @@ These instructions will get you a copy of the project up and running on your loc
 To start all the services in detached mode, run the following command from the root of the project:
 
 ```sh
-docker-compose up -d
+docker-compose up --build
 ```
 
 The services will be built and started as defined in the `docker-compose.yml` file.
