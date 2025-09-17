@@ -6,6 +6,11 @@ services:
       - 8222:8222
 
   client-gateway:
+    depends_on:
+      - nats-server
+      - products-ms
+      - orders-ms
+      - auth-ms
     build: ./client-gateway
     ports:
       - ${CLIENT_GATEWAY_PORT}:3000
@@ -17,6 +22,8 @@ services:
       - NATS_SERVERS=nats://nats-server:4222
 
   products-ms:
+    depends_on:
+      - nats-server
     build: ./products-ms
     volumes:
       - ./products-ms/src:/usr/src/app/src
@@ -27,9 +34,9 @@ services:
       - DATABASE_URL=file:./dev.db
 
   # Orders MS
- # Orders MS
   orders-ms:
     depends_on:
+      - nats-server
       - orders-db
     build: ./orders-ms
     volumes:
@@ -55,6 +62,8 @@ services:
       - POSTGRES_DB=ordersdb
 
   auth-ms:
+    depends_on:
+      - nats-server
     build: ./auth-ms
     volumes:
       - ./auth-ms/src:/usr/src/app/src
@@ -62,3 +71,4 @@ services:
     environment:
       - PORT=3004
       - NATS_SERVERS=nats://nats-server:4222
+      - DATABASE_URL=${AUTH_DATABASE_URL}
